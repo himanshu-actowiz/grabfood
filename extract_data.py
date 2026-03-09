@@ -4,12 +4,13 @@ from threading import Thread
 from utils import read_gzip_files
 from db_config import create_table , insert_into_db
 
-
+#DIR PATH
 base_path = r"C:\Users\hemanshu.marwadi\Desktop\PDP Json's\PDP"
 Table = 'grabFood'
+#Every single Query run for 2k batch
 BATCH_SIZE = 2000
 
-
+#Data Parsel
 def parsel_data(json_data):
 
     merchant = json_data.get('merchant')
@@ -53,10 +54,9 @@ def parsel_data(json_data):
 
     return result
 
-
+#main fun execute operation
 def main(start , end):
     
-
     batch = []
     total = 0
 
@@ -84,6 +84,7 @@ if __name__ == '__main__':
     create_table(Table)
     stating_time = time.time()
     
+    #use Thread's
     threads = []
     step = 10000
     total_files = 60000
