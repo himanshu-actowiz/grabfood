@@ -1,6 +1,6 @@
 import json
 import time
-import sys
+from threading import Thread
 from utils import read_gzip_files
 from db_config import create_table , insert_into_db
 
@@ -55,7 +55,7 @@ def parsel_data(json_data):
 
 
 def main(start , end):
-    create_table(Table)
+    
 
     batch = []
     total = 0
@@ -81,15 +81,21 @@ def main(start , end):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print("Usage: python main.py <start> <end>")
-        sys.exit(1)
+    create_table(Table)
+    stating_time = time.time()
+    
+    threads = []
+    step = 10000
+    total_files = 60000
 
-    start = int(sys.argv[1])
-    end = int(sys.argv[2])
+    for start in range(0, total_files, step):
+        end = start + step
+        target_obj = Thread(target=main, args=(start, end))
+        threads.append(target_obj)
+        target_obj.start()
 
-    starting = time.time()
-    main(start, end)
-    ending = time.time()
+    for t in threads:
+        t.join()
+    end_time = time.time()
 
-    print('Execution Time : ', ending - starting)
+    print('Execution Time : ', end_time - stating_time)
